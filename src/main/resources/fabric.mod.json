@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "fabricdash",
+  "version": "${version}",
+  "name": "FabricDash",
+  "description": "Server admin dashboard with web interface for Fabric servers",
+  "authors": [
+    "Frxme"
+  ],
+  "contact": {
+    "homepage": "https://github.com/Framepersecond/Dash",
+    "sources": "https://github.com/Framepersecond/Dash"
+  },
+  "license": "All-Rights-Reserved",
+  "icon": "assets/fabricdash/icon.png",
+  "environment": "server",
+  "entrypoints": {
+    "server": [
+      "dash.FabricDash"
+    ]
+  },
+  "accessWidener": "fabricdash.accesswidener",
+  "depends": {
+    "fabricloader": ">=0.16.0",
+    "minecraft": "~1.21.11",
+    "java": ">=21",
+    "fabric-api": "*"
+  }
+}
