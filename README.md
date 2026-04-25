@@ -1,106 +1,166 @@
 # FabricDash
 
-**Modern web-based admin dashboard for Fabric Minecraft servers**
+**Modern web-based admin dashboard for Minecraft servers (v2.0)**
 
-FabricDash gives you a full web panel for server administration from any browser: live stats, player moderation, console access, backups, file management, settings, and updates.
+Dash provides a comprehensive web interface for server administration, enabling you to manage your Minecraft server from any device with a browser. Monitor server performance, manage players, execute commands, configure settings, and handle backups—all through an elegant, modern web UI.
 
 ## Version
 
-- Current branch: **FabricDash (Fabric edition)**
+- Current version: **2.1.5**
 
 ## Features
 
 ### 📊 Real-Time Monitoring
-- Live server statistics (TPS, memory, CPU)
-- Historical performance graphs
-- Console output streaming
-- Online/offline player tracking
+- Live server statistics (TPS, memory, CPU usage)
+- Historical performance graphs and analytics
+- Online player tracking with detailed profiles
+- Console log streaming with color-coded output
+- Setup-safe telemetry endpoints for panel integrations
 
 ### 👥 Player Management
-- Player profiles and moderation actions
-- Kick, ban, freeze/unfreeze, teleport
-- Player notes
-- Inventory and Ender Chest management
+- View all players with session history and playtime
+- Kick, ban, freeze, or teleport players
+- Add and manage admin notes for players
+- View and edit player inventories and ender chests
+- Whitelist management
 
-### ⚙️ Server Settings
-- MOTD editing
-- View/simulation distance controls
-- Gamerule toggles
-- Whitelist controls
-- Server icon upload
+### ⚙️ Server Configuration
+- Modify server settings (MOTD, view distance, simulation distance)
+- Configure game rules for all worlds
+- Upload and manage server icon
+- Enable/disable plugins dynamically
 
-### 📁 Files, Backups, Datapacks
-- File browser/editor/uploader
-- Folder upload support
-- Manual + scheduled backups
-- Backup download/delete
-- Datapack upload/toggle/delete
+### 💾 Backup System
+- Create manual backups instantly
+- Schedule automatic backups
+- Download backup archives
+- Manage backup retention (configurable max backups)
 
-### 🧩 Fabric-Friendly Mod Workflow
-- Mod upload/delete through the panel (`mods/`)
-- Fabric-focused wording/UI (Mods, not Plugins)
+### 📁 File Management
+- Browse server files and directories
+- Edit configuration files directly in the browser
+- Upload files and plugins
+- Upload and manage datapacks
 
-### 🔄 Updater
-- Checks latest release from `Framepersecond/FabricDash`
-- Download + stage update from the web panel
-- Applies staged update on restart
-- If GitHub rate-limit is hit, automatic checks pause for **24 hours**
-- Manual **Scan for Updates** can still force a retry
+### 🎮 Advanced Features
+- Execute console commands remotely
+- Teleport players to coordinates or other players
+- Broadcast messages as admin or server
+- Player freeze system for moderation
+- Web-based registration system with time-limited codes
+
+### 🔐 SSO + Approval Workflow (v2.0)
+- NeoDash bridge SSO bootstrap flow
+- Waiting room for identities pending admin approval
+- Pending bridge-user review directly in the Users page
+- Role assignment during bridge approval
+- Bridge-aware navigation and session handoff
+
+### 📱 Responsive UI Improvements (v2.0)
+- Reworked global scrolling behavior
+- Mobile-first table handling for Players, Tasks, and Audit pages
+- Overflow/clipping fixes for action menus and card actions
+- Improved mobile form layout in Settings pages
 
 ## Installation
 
-1. Download the latest FabricDash `.jar` from the [releases page](../../releases).
-2. Put it in your server's `mods/` folder.
-3. Start/restart the server.
-4. Open the panel at `http://<server-ip>:<port>` (default port: `8080`).
+1. Download the latest `Dash.jar` from the [releases page](../../releases)
+2. Place the JAR file in your server's `plugins` folder
+3. Restart your server
+4. Configure the web port in `plugins/Dash/config.yml` (default: 8080)
+5. Restart the server again to apply configuration
 
-## Initial Setup
+## Usage
 
-1. Join as OP.
-2. Run `/dash register`.
-3. Open the setup URL from chat or console.
-4. Enter the generated code and create your web admin login.
+### Initial Setup
 
-## Commands
+1. Join your server as an operator
+2. Run `/dash register` to generate a registration code
+3. Open the web dashboard at `http://localhost:PORT` (replace PORT with your configured port)
+4. Enter your registration code and create admin credentials
+5. Log in with your new credentials
 
-| Command | Description |
-|---------|-------------|
-| `/dash register` | Generate setup/registration code |
-| `/dash update` | Download/stage latest FabricDash update |
-| `/dash port <port>` | Change web panel port |
+### Commands
+
+| Command | Description | Permission |
+|---------|-------------|------------|
+| `/dash register` | Generate a web registration code (expires in 5 minutes) | `dash.register` |
+
+### Permissions
+
+| Permission | Description | Default |
+|-----------|-------------|---------|
+| `dash.register` | Allows generating web registration codes | op |
 
 ## Configuration
 
-Config file location:
+Edit `plugins/Dash/config.yml`:
 
-- `config/fabricdash/config.yml`
+```yaml
+# Web server port for the admin dashboard
+port: 8080
 
-Important keys:
+# Database settings for player data tracking
+database:
+  type: sqlite
+  file: dash.db
 
-- `port` (default `8080`)
-- `backups.max-backups`
-- `panel-url` (optional public URL override for setup links)
-- `bridge.*` settings (if using NeoBridge/NeoDash integration)
-- `updater.github-repo` (default `Framepersecond/FabricDash`)
+# Backup settings
+backups:
+  directory: backups
+  max-backups: 10
+```
 
-## Supported Environment
+**Configuration Options:**
+- `port`: Web server port (default: 8080)
+- `database.type`: Database type (currently supports SQLite)
+- `database.file`: Database file name
+- `backups.directory`: Backup storage directory
+- `backups.max-backups`: Maximum number of backups to retain
 
-- **Minecraft:** 1.21+ (Fabric server)
-- **Loader:** Fabric
-- **Java:** 21+
+## Supported Versions
+
+- **Minecraft:** 1.21, 1.21.1, 1.21.2, 1.21.3, 1.21.4+
+- **Server Software:** Paper, Spigot, and compatible forks
+- **Java:** 21 or higher
 
 ## Security
 
-- Time-limited registration codes
-- Session-based web auth
-- Action/audit logging
-- Path-safe file management and upload checks
-
-## Release Notes
-
-See [RELEASE_NOTES.md](./RELEASE_NOTES.md) for FabricDash changes and recent fixes.
+- Registration codes expire after 5 minutes
+- Session-based authentication with secure cookies
+- Session hardening updates in v2.0 (session-cookie behavior + explicit logout flow)
+- All actions are logged with IP tracking
+- File upload validation and path sanitization
+- Admin credentials are hashed and stored securely
 
 ## License
 
-BSD 3-Clause License (see `LICENSE`).
+This project is licensed under the BSD 3-Clause License - see the LICENSE file for details.
 
+## Author
+
+Developed by **Frxme**
+
+---
+
+<div align="center">
+
+## 🤝 Partner
+
+<a href="https://emeraldhost.de/frxme">
+  <img src="https://cdn.emeraldhost.de/branding/icon/icon.png" width="80" alt="Emerald Host Logo">
+</a>
+
+### Powered by EmeraldHost
+
+*DDoS-Protection, NVMe Performance und 99.9% Uptime.* *Der Host meines Vertrauens für alle Development-Server.*
+
+<a href="https://emeraldhost.de/frxme">
+  <img src="https://img.shields.io/badge/Code-Frxme10-10b981?style=for-the-badge&logo=gift&logoColor=white&labelColor=0f172a" alt="Use Code Frxme10 for 10% off">
+</a>
+
+</div>
+
+---
+
+*For issues, feature requests, or contributions, please visit the [GitHub repository](../../issues)*
